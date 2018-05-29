@@ -7,7 +7,7 @@ $(document).ready(function() {
         const hostname = config.hostname;
         const port = config.port;
 
-        const socket = new WebSocket(`ws://${document.domain}:${port}/`);
+        const socket = new WebSocket(`ws://${document.domain}/`);
         socket.addEventListener('open', onOpen(socket));
         socket.addEventListener('message', onMessage(socket));
     });
