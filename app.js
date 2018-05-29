@@ -8,7 +8,14 @@ const url = require('url');
 const chat = require('./chat.js');
 const stdin = process.openStdin();
 
-const config = require('./config.json');
+var config;
+try {
+    config = require('./config.json');
+} catch (e) {
+    console.log('config.json not found.');
+    console.log('copy the default_config.json file to set up config');
+    process.exit();
+}
 const hostname = config.hostname;
 const port = config.port;
 
