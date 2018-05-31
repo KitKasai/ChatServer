@@ -5,6 +5,9 @@
 p {
     margin: 0;
 }
+body {
+    overflow: hidden;
+}
 
 .login-input {
     margin: 5px;
@@ -23,7 +26,6 @@ p {
     margin-right: 10px;
 }
 #chatbox-container {
-    height: 100%;
     margin: 0px;
 }
 #login-text {
@@ -36,7 +38,6 @@ p {
 }
 
 #chatbox {
-    height: 100%;
     border-style: solid;
     border-width: 1px;
     overflow: auto;
