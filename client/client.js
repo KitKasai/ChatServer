@@ -24,10 +24,6 @@ function onOpen(socket) {
                 $('#chatinput').val('');
             }
         });
-
-        $('#chatbox').css({
-            'height' : $('#chatbox').outerHeight() - $('#chatinput').height() - 20,
-        });
     }
 }
 
