@@ -2,6 +2,7 @@
 
 const EventEmitter = require('events');
 const debug = require('debug-levels')('rooms');
+
 let rooms = new Map();
 
 function Room(name) {

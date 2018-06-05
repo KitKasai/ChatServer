@@ -1,6 +1,8 @@
 'use strict';
 
 const users = new Map();
+const debug = require('debug-levels')('users');
+
 let count = 0;
 function User(socket, name) {
     this.ws = socket;
@@ -21,6 +23,7 @@ function User(socket, name) {
             let roomName = this.rooms[i].name;
             rooms.removeUser(roomName, this);
         }
+        users.delete(this.username);
     }
 }
 
@@ -36,6 +39,11 @@ function addUser(socket, name) {
     return u;
 }
 
+function removeUser(name) {
+    users.get(name).onClose();
+}
+
 exports = module.exports = {};
 
 exports.addUser = addUser;
+exports.removeUser = removeUser;
