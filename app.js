@@ -8,6 +8,9 @@ const url = require('url');
 const chat = require('./chat.js');
 const stdin = process.openStdin();
 
+global.users = require('./users.js');
+global.rooms = require('./rooms.js');
+
 var config;
 try {
     config = require('./config.json');
@@ -16,6 +19,7 @@ try {
     console.log('copy the default_config.json file to set up config');
     process.exit();
 }
+
 const hostname = config.hostname;
 const port = config.port;
 
