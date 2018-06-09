@@ -5,12 +5,12 @@ const debug = require('debug-levels')('server');
 const http = require('http');
 const fs = require('fs');
 const url = require('url');
-const chat = require('./chat.js');
 const stdin = process.openStdin();
 
 global.users = require('./users.js');
 global.rooms = require('./rooms.js');
-
+global.commands = require('./commands.js');
+global.chat = require('./chat.js');
 var config;
 try {
     config = require('./config.json');
@@ -77,4 +77,4 @@ stdin.addListener('data', function(data) {
     data = String(data).trim().split(' ');
 });
 
-const chatServer = chat.startChatServer(server);
+chat.startChatServer(server);

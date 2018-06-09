@@ -29,7 +29,7 @@ function User(socket, name) {
 
 function addUser(socket, name) {
     let u = new User(socket, name);
-    name = u.username;
+    name = u.username; //if no name is provided, the user has a guest name
     if (users.has(name)) {
         //user already exists
         debug.info('User with name: ' + name + ' already exists.');
@@ -43,7 +43,20 @@ function removeUser(name) {
     users.get(name).onClose();
 }
 
+function changeName(oldname, name) {
+    let user = users.get(oldname);
+    if (users.has(name)) {
+        //TODO: send errors to client
+    } else {
+        //TODO: tell client name is changed
+        users.delete(user.username)
+        user.username = name;
+        users.set(name, user);
+    }
+}
+
 exports = module.exports = {};
 
 exports.addUser = addUser;
 exports.removeUser = removeUser;
+exports.changeName = changeName;
