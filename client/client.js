@@ -1,16 +1,14 @@
 'use strict';
 
 $(document).ready(function() {
-    $.get('config.json', function(data) {
-        console.log(data);
-        const config = JSON.parse(data);
-        const hostname = config.hostname;
-        const port = config.port;
-
-        const socket = new WebSocket(`ws://${document.domain}/`);
-        socket.addEventListener('open', onOpen(socket));
-        socket.addEventListener('message', onMessage(socket));
-    });
+    var socket;
+    try {
+        socket = new WebSocket(`wss://${document.domain}/`);
+    } catch (e) {
+        socket = new WebSocket(`ws://${document.domain}/`);
+    }
+    socket.addEventListener('open', onOpen(socket));
+    socket.addEventListener('message', onMessage(socket));
 });
 
 function onOpen(socket) {

@@ -22,7 +22,6 @@ exports.Message = Message;
 
 exports.startChatServer = function(server) {
     const wss = new WebSocket.Server({server});
-    rooms.addRoom('lobby');
     wss.on('connection', function (ws) {
         debug.info('incoming connection');
         //message received

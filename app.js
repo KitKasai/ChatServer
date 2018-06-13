@@ -3,6 +3,7 @@
 const debug = require('debug-levels')('server');
 
 const http = require('http');
+const https = require('https');
 const fs = require('fs');
 const url = require('url');
 const stdin = process.openStdin();
@@ -11,31 +12,45 @@ global.users = require('./users.js');
 global.rooms = require('./rooms.js');
 global.commands = require('./commands.js');
 global.chat = require('./chat.js');
-var config;
+
 try {
-    config = require('./config.json');
+    require.resolve('./config.json');
 } catch (e) {
     console.log('config.json not found.');
     console.log('copy the default_config.json file to set up config');
     process.exit();
 }
+const config = require('./config.json');
 
 const hostname = config.hostname;
 const port = config.port;
+const httpsport = config.httpsport;
 
+const options = {
+    key: fs.readFileSync(config.key),
+    cert: fs.readFileSync(config.cert)
+};
 
-const server = http.createServer(function(req, res) {
+const server = http.createServer(serverCallback);
+const httpsserver = https.createServer(options, serverCallback);
+
+server.listen(port, hostname, function() {
+    debug.info(`Server running at http://${hostname}:${port}/`);
+    chat.startChatServer(server);
+});
+httpsserver.listen(httpsport, hostname, function() {
+    debug.info(`Server running at http://${hostname}:${httpsport}/`);
+    chat.startChatServer(httpsserver);
+});
+
+function serverCallback(req, res) {
     let method = req.method;
     if (method === 'GET') {
         requestGet(req, res);
     } else if (method === 'POST') {
         requestPost(req, res);
     }
-});
-
-server.listen(port, hostname, function() {
-    debug.info(`Server running at http://${hostname}:${port}/`);
-});
+}
 
 //handle HTTP get requests
 function requestGet(req, res) {
@@ -77,4 +92,4 @@ stdin.addListener('data', function(data) {
     data = String(data).trim().split(' ');
 });
 
-chat.startChatServer(server);
+rooms.addRoom('lobby');
