@@ -2,11 +2,12 @@
 
 $(document).ready(function() {
     var socket;
-    try {
+    if (location.protocol === 'https:') {
         socket = new WebSocket(`wss://${document.domain}/`);
-    } catch (e) {
+    } else {
         socket = new WebSocket(`ws://${document.domain}/`);
     }
+
     socket.addEventListener('open', onOpen(socket));
     socket.addEventListener('message', onMessage(socket));
 });

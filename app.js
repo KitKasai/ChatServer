@@ -6,6 +6,7 @@ const http = require('http');
 const https = require('https');
 const fs = require('fs');
 const url = require('url');
+const express = require('express');
 const stdin = process.openStdin();
 
 global.users = require('./users.js');
@@ -38,7 +39,7 @@ stdin.addListener('data', function(data) {
     data = String(data).trim().split(' ');
 });
 
-rooms.addRoom('lobby')l
+rooms.addRoom('lobby');
 chat.startChatServer(server);
 server.on('request', app);
 server.listen(port, function() {
