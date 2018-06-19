@@ -18,7 +18,9 @@ let Message = function(content, username, room) {
 }
 
 exports.startChatServer = function(server) {
-    const wss = new WebSocket.Server({server});
+    const wss = new WebSocket.Server({server: server}, function() {
+        debug.info('WSS started');
+    });
     const messages = new EventEmitter();
     rooms.addRoom('lobby');
     wss.on('connection', function (ws) {
