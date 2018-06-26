@@ -8,9 +8,37 @@ $(document).ready(function() {
         socket = new WebSocket(`ws://${document.domain}/`);
     }
 
+    //TODO: validate forms
+    $('#login-button').click(function() {
+        $.post('login', $('#login-form').serialize(), onLogin);
+    });
+    $('#register-button').click(function() {
+        $.post('register', $('#register-form').serialize(), onRegister);
+    });
+    $('#register-form').hide();
+
+    $('#switch-to-register').click(function() {
+        $('#login-form').hide();
+        $('#register-form').show();
+    });
+    $('#switch-to-login').click(function() {
+        $('#login-form').show();
+        $('#register-form').hide();
+    });
+
     socket.addEventListener('open', onOpen(socket));
     socket.addEventListener('message', onMessage(socket));
 });
+
+function onLogin(data) {
+    if (data.success) {
+        $('#username').text(data.username);
+    }
+}
+
+function onRegister(data) {
+
+}
 
 function onOpen(socket) {
     return function() {

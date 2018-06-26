@@ -1,7 +1,7 @@
 'use strict';
 
 const EventEmitter = require('events');
-const debug = require('debug-levels')('commands');
+const debug = require('debug-levels')('chatserver-commands');
 exports = module.exports = {};
 
 let commands = new Map();

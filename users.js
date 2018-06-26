@@ -1,7 +1,7 @@
 'use strict';
 
 const users = new Map();
-const debug = require('debug-levels')('users');
+const debug = require('debug-levels')('chatserver-users');
 
 let count = 0;
 function User(socket, name) {

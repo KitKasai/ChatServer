@@ -2,7 +2,7 @@
 
 const WebSocket = require('ws');
 const EventEmitter = require('events');
-const debug = require('debug-levels')('chat');
+const debug = require('debug-levels')('chatserver-chat');
 
 exports = module.exports = {};
 
