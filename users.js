@@ -1,7 +1,10 @@
 'use strict';
 
 const users = new Map();
+const tokens = new Map();
 const debug = require('debug-levels')('chatserver-users');
+const rack = require('hat').rack();
+const Message = require('./chat.js').Message;
 
 let count = 0;
 function User(socket, name) {
@@ -47,7 +50,7 @@ function changeName(oldname, name) {
     let user = users.get(oldname);
     if (users.has(name)) {
         //TODO: send errors to client
-    } else {
+    } else if (user) {
         //TODO: tell client name is changed
         users.delete(user.username)
         user.username = name;
@@ -55,8 +58,35 @@ function changeName(oldname, name) {
     }
 }
 
+//after authenticating through post, generate token to authenticate socket
+function generateToken(username) {
+    let token = rack();
+    tokens.set(token, username);
+    setTimeout(function() {
+        if (tokens.has(token)) {
+            tokens.delete(token);
+            debug.verbose('temp token deleted (timeout)');
+        }
+    }, 1000 * 60 * 5);
+    return token;
+}
+
+function authenticate(oldname, token) {
+    let user = users.get(oldname);
+    let newname = tokens.get(token);
+    if (oldname && newname) {
+        changeName(oldname, newname);
+        let m = new Message(newname, oldname);
+        m.type = 'namechange';
+        user.ws.send(JSON.stringify(m));
+    }
+    tokens.delete(token);
+}
+
 exports = module.exports = {};
 
 exports.addUser = addUser;
 exports.removeUser = removeUser;
 exports.changeName = changeName;
+exports.generateToken = generateToken;
+exports.authenticate = authenticate;

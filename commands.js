@@ -13,7 +13,6 @@ function handleCommand(message) {
         type: text[0],
         args: text.slice(1)
     };
-    console.log(command);
     commands.get(command.type)(command);
 }
 
@@ -30,6 +29,15 @@ addCommand(['nick', 'nickname'], function(command) {
         return;
     }
     users.changeName(command.msg.username,command.args[0]);
+});
+
+addCommand(['login'], function(command) {
+    if (command.args.length < 1) {
+        //TODO: send errors to client
+        debug.verbose('expected 1 argument');
+        return;
+    }
+    users.authenticate(command.msg.username,command.args[0]);
 });
 
 exports.handleCommand = handleCommand;

@@ -1,7 +1,7 @@
 'use strict';
 
+var socket;
 $(document).ready(function() {
-    var socket;
     if (location.protocol === 'https:') {
         socket = new WebSocket(`wss://${document.domain}/`);
     } else {
@@ -31,13 +31,19 @@ $(document).ready(function() {
 });
 
 function onLogin(data) {
+    console.log('login data');
+    console.log(data);
     if (data.success) {
-        $('#username').text(data.username);
+        socket.send('/login ' + data.token);
     }
 }
 
 function onRegister(data) {
-
+    console.log('register data');
+    console.log(data);
+    if (data.success) {
+        socket.send('/login ' + data.token);
+    }
 }
 
 function onOpen(socket) {
@@ -61,6 +67,11 @@ function onMessage(socket) {
         let username = msg.username;
         let room = msg.room;
         console.log('received: ' + message.data);
-        $('#chatbox').append('<p>' + username + ': ' + content + '</p>');
+        if (msg.type === 'message') {
+            $('#chatbox').append('<p>' + username + ': ' + content + '</p>');
+        }
+        if (msg.type === 'namechange') {
+            $('#username').text(msg.content);
+        }
     }
 }

@@ -89,9 +89,9 @@ app.post('/register', function(req, res, next) {
             } else {
                 resData.success = false;
             }
+            res.json(resData);
+            res.end();
         });
-        res.json(resData);
-        res.end();
     }
 });
 
@@ -99,6 +99,7 @@ function loginSuccess(user, req) {
     let resData = {};
     resData.success = true;
     resData.username = user.username;
+    resData.token = users.generateToken(user.username);
     req.session.userID = user._id;
     return resData;
 }
