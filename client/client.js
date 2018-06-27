@@ -1,10 +1,50 @@
 'use strict';
 
+var socket;
 $(document).ready(function() {
-    const socket = new WebSocket(`ws://${document.domain}/`);
+    if (location.protocol === 'https:') {
+        socket = new WebSocket(`wss://${document.domain}/`);
+    } else {
+        socket = new WebSocket(`ws://${document.domain}/`);
+    }
+
+    //TODO: validate forms
+    $('#login-button').click(function() {
+        $.post('login', $('#login-form').serialize(), onLogin);
+    });
+    $('#register-button').click(function() {
+        $.post('register', $('#register-form').serialize(), onRegister);
+    });
+    $('#register-form').hide();
+
+    $('#switch-to-register').click(function() {
+        $('#login-form').hide();
+        $('#register-form').show();
+    });
+    $('#switch-to-login').click(function() {
+        $('#login-form').show();
+        $('#register-form').hide();
+    });
+
     socket.addEventListener('open', onOpen(socket));
     socket.addEventListener('message', onMessage(socket));
 });
+
+function onLogin(data) {
+    console.log('login data');
+    console.log(data);
+    if (data.success) {
+        socket.send('/login ' + data.token);
+    }
+}
+
+function onRegister(data) {
+    console.log('register data');
+    console.log(data);
+    if (data.success) {
+        socket.send('/login ' + data.token);
+    }
+}
 
 function onOpen(socket) {
     return function() {
@@ -27,6 +67,11 @@ function onMessage(socket) {
         let username = msg.username;
         let room = msg.room;
         console.log('received: ' + message.data);
-        $('#chatbox').append('<p>' + username + ': ' + content + '</p>');
+        if (msg.type === 'message') {
+            $('#chatbox').append('<p>' + username + ': ' + content + '</p>');
+        }
+        if (msg.type === 'namechange') {
+            $('#username').text(msg.content);
+        }
     }
 }

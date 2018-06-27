@@ -2,7 +2,7 @@
 
 const WebSocket = require('ws');
 const EventEmitter = require('events');
-const debug = require('debug-levels')('chat');
+const debug = require('debug-levels')('chatserver-chat');
 
 exports = module.exports = {};
 
@@ -10,6 +10,7 @@ exports = module.exports = {};
 let Message = function(content, username, room) {
     this.content = content;
     this.username = username;
+    this.type = 'message';
     if (room) {
         this.room = room;
     } else {
@@ -17,37 +18,39 @@ let Message = function(content, username, room) {
     }
 }
 
+exports.Message = Message;
+
 exports.startChatServer = function(server) {
-    const wss = new WebSocket.Server({server: server}, function() {
-        debug.info('WSS started');
-    });
-    const messages = new EventEmitter();
-    rooms.addRoom('lobby');
+    const wss = new WebSocket.Server({server: server});
     wss.on('connection', function (ws) {
         debug.info('incoming connection');
         //message received
         let user = global.users.addUser(ws);
         //TODO: user sends messages to specific rooms
         rooms.addUser('lobby', user);
-        user.on('message', function (message) {
-            //currently, all messages are global
-            /*
-            TODO: check if user is in a room to be able to
-                  send to that room
-            */
-            message = new Message(message, user.username);
-            rooms.sendMessage(message);
-        });
+        user.on('message', handleMessageCallback(user));
         user.on('close', function() {
             user.onClose()
         });
     });
-
-    //handle received messages
-    messages.on('received', function(message) {
-        debug.verbose('received: ' + message);
-
-        //echo to all connected sockets
-        messages.emit('send', message);
-    });
 };
+
+function handleMessageCallback(user) {
+    return function (message) {
+        //fires when the websocket receives a message
+        message = new Message(message, user.username);
+        //handle command
+        //TODO: maybe handle this logic client side?
+        if (message.content.substring(0, 1) === '/') {
+            message.content = message.content.substring(1);
+            commands.handleCommand(message);
+            return;
+        }
+        //currently, all messages are global
+        /*
+        TODO: check if user is in a room to be able to
+              send to that room
+        */
+        rooms.sendMessage(message);
+    }
+}

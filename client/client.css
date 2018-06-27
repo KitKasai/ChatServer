@@ -28,13 +28,8 @@ body {
 #chatbox-container {
     margin: 0px;
 }
-#login-text {
-    position: absolute;
-}
-
-#login-form {
-    position: absolute;
-    left: 110px;
+.login-text {
+    transform: translate(0, 30%);
 }
 
 #chatbox {

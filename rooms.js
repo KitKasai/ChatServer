@@ -1,7 +1,7 @@
 'use strict';
 
 const EventEmitter = require('events');
-const debug = require('debug-levels')('rooms');
+const debug = require('debug-levels')('chatserver-rooms');
 
 let rooms = new Map();
 

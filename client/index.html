@@ -9,21 +9,33 @@
 
     <body>
         <div class="container" id="login">
-            <div id="login-text">
-                <p>
-                    Username
-                </p>
-                <p>
-                    Password
-                </p>
-            </div>
             <form id="login-form">
-                <input class="login-input" type="text" name="username" /><br />
-                <input class="login-input" type="text" name="password" /><br />
-                <input type="submit" value="Submit" />
-                <p>
-                    WIP
-                </p>
+                <div>
+                    <p class="login-text">Username:</p>
+                    <input class="login-input" type="text" name="username" /><br />
+                </div>
+                <div>
+                    <p class="login-text">Password:</p>
+                    <input class="login-input" type="text" name="password" /><br />
+                </div>
+                <input id="login-button" type="button" value="Login" />
+                <input id="switch-to-register" type="button" value="Register instead" />
+            </form>
+            <form id="register-form">
+                <div>
+                    <p class="login-text">Username:</p>
+                    <input class="login-input" type="text" name="username" /><br />
+                </div>
+                <div>
+                    <p class="login-text">Password:</p>
+                    <input class="login-input" type="text" name="password" /><br />
+                </div>
+                <div>
+                    <p class="login-text">Confirm PW:</p>
+                    <input class="login-input" type="text" name="passwordconf" /><br />
+                </div>
+                <input id="register-button" type="button" value="Register" />
+                <input id="switch-to-login" type="button" value="Login instead" />
             </form>
         </div>
         <div class="container" id="chat">
